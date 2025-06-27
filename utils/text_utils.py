@@ -1,35 +1,42 @@
 import re
-from typing import List
+from typing import List, Union
 
-def clean_text(text) -> str:
+def clean_text(text: Union[str, List, None]) -> str:
     """
-    Cleans input text. Converts to string if it's a list or any non-string type.
-    Removes special characters and lowercases it.
+    Cleans input text by removing special characters and converting to lowercase.
+    Handles None, lists, or non-string inputs safely.
     """
-    # Convert None or unsupported types to empty string
-    if not isinstance(text, (str, list)):
-        text = ""
-
-    # If list, convert to string
+    if text is None:
+        return ""
     if isinstance(text, list):
         text = " ".join(str(x) for x in text)
+    if not isinstance(text, str):
+        text = str(text)
 
-    # Convert to lowercase and remove non-alphanumeric characters
     text = text.lower()
     text = ''.join(c for c in text if c.isalnum() or c.isspace())
     return text
 
 def tokenize_sentences(text: str) -> List[str]:
-    text = clean_text(text)
-    return re.split(r'(?<=[.!?]) +', text)
+    cleaned = clean_text(text)
+    return re.split(r'(?<=[.!?]) +', cleaned)
 
 def tokenize_words(text: str) -> List[str]:
     cleaned = clean_text(text)
     return cleaned.split()
 
-def compute_word_freq(text: str) -> dict:
-    words = tokenize_words(text)
+def compute_word_freq(words: Union[str, List[str]]) -> dict:
+    """
+    Computes frequency of words from a string or list of words.
+    """
+    if isinstance(words, str):
+        words = tokenize_words(words)
+    if not isinstance(words, list):
+        return {}
+
     freq = {}
     for word in words:
-        freq[word] = freq.get(word, 0) + 1
+        if isinstance(word, str):
+            word = word.lower()
+            freq[word] = freq.get(word, 0) + 1
     return freq
