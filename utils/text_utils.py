@@ -4,13 +4,13 @@ import string
 def clean_text(text):
     """
     Safely cleans text by converting to lowercase, removing punctuation, and stripping extra spaces.
-    Handles None, numbers, and other types gracefully.
+    Converts non-string input into string if needed.
     """
     if not isinstance(text, str):
-        try:
+        if isinstance(text, list):
+            text = " ".join([str(t) for t in text])
+        else:
             text = str(text or "")
-        except:
-            text = ""
 
     text = text.lower()
     text = re.sub(f"[{re.escape(string.punctuation)}]", "", text)
@@ -23,7 +23,7 @@ def tokenize_sentences(text):
     Splits text into sentences using basic punctuation.
     """
     if not isinstance(text, str):
-        text = str(text or "")
+        text = clean_text(text)
 
     sentences = re.split(r'[.\n!?]+', text)
     return [s.strip() for s in sentences if s.strip()]
@@ -43,11 +43,13 @@ def compute_word_freq(words):
     """
     freq = {}
     if not isinstance(words, list):
-        words = [str(words)]
+        words = tokenize_words(words)
 
     for word in words:
         if not isinstance(word, str):
             word = str(word)
-        freq[word] = freq.get(word, 0) + 1
+        word = word.strip()
+        if word:
+            freq[word] = freq.get(word, 0) + 1
 
     return freq
