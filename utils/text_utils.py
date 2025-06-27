@@ -32,7 +32,7 @@ def extract_tasks(text):
     tasks = []
     for sentence in sentences:
         for keyword in task_keywords:
-            if keyword in sentence:
+            if keyword in sentence.lower():
                 tasks.append(sentence.strip())
                 break
     return tasks
