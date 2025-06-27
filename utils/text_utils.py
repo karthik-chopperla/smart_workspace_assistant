@@ -9,8 +9,7 @@ def clean_text(text):
 def tokenize_sentences(text):
     """Split cleaned text into individual sentences."""
     cleaned = clean_text(text)
-    sentences = re.split(r'[.!?]', cleaned)
-    return [s.strip() for s in sentences if s.strip()]
+    return [s.strip() for s in re.split(r'[.!?]', cleaned) if s.strip()]
 
 def tokenize_words(text):
     """Split cleaned text into individual words."""
@@ -28,9 +27,11 @@ def compute_word_freq(words):
 def extract_tasks(text):
     """Extract task-like sentences using task keywords."""
     task_keywords = ["finalize", "schedule", "prepare", "compile", "check", "make sure"]
-    sentences = tokenize_sentences(text)
+    sentences = tokenize_sentences(text)  # This returns list of strings
     tasks = []
     for sentence in sentences:
+        if not isinstance(sentence, str):
+            continue  # 🚫 skip non-string items
         for keyword in task_keywords:
             if keyword in sentence.lower():
                 tasks.append(sentence.strip())
