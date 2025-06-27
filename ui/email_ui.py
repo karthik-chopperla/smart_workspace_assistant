@@ -16,15 +16,18 @@ def email_ui():
 
     if st.button("🔍 Summarize Email"):
         if user_email.strip():
-            result = summarize_email(user_email)
-            st.markdown("### 📝 Summary")
-            st.success(result["summary"])
+            try:
+                result = summarize_email(user_email)
+                st.markdown("### 📝 Summary")
+                st.success(result["summary"])
 
-            st.markdown("### ✅ Actionable Tasks")
-            if result["tasks"]:
-                for task in result["tasks"]:
-                    st.write("- " + task)
-            else:
-                st.info("No actionable tasks detected.")
+                st.markdown("### ✅ Actionable Tasks")
+                if result["tasks"]:
+                    for task in result["tasks"]:
+                        st.write("- " + task)
+                else:
+                    st.info("No actionable tasks detected.")
+            except Exception as e:
+                st.error(f"An error occurred during summarization: {str(e)}")
         else:
             st.warning("Please enter some email content.")
