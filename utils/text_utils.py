@@ -18,7 +18,7 @@ def tokenize_words(text):
     return cleaned.split()
 
 def compute_word_freq(words):
-    """Count word frequencies from list of words."""
+    """Count word frequencies from a list of words."""
     freq = {}
     for word in words:
         if isinstance(word, str):
