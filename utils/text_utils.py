@@ -1,42 +1,48 @@
 import re
-from typing import List, Union
+import string
 
-def clean_text(text: Union[str, List, None]) -> str:
+def clean_text(text):
     """
-    Cleans input text by removing special characters and converting to lowercase.
-    Handles None, lists, or non-string inputs safely.
+    Cleans text by lowercasing, removing punctuation, and stripping whitespace.
+    Handles None or invalid input safely.
     """
-    if text is None:
-        return ""
-    if isinstance(text, list):
-        text = " ".join(str(x) for x in text)
     if not isinstance(text, str):
-        text = str(text)
+        text = str(text or "")
 
     text = text.lower()
-    text = ''.join(c for c in text if c.isalnum() or c.isspace())
+    text = re.sub(f"[{re.escape(string.punctuation)}]", "", text)
+    text = re.sub(r"\s+", " ", text).strip()
     return text
 
-def tokenize_sentences(text: str) -> List[str]:
-    cleaned = clean_text(text)
-    return re.split(r'(?<=[.!?]) +', cleaned)
 
-def tokenize_words(text: str) -> List[str]:
+def tokenize_sentences(text):
+    """
+    Splits text into sentences using period, newline, or question mark as delimiters.
+    """
+    if not isinstance(text, str):
+        text = str(text or "")
+
+    sentences = re.split(r'[.\n!?]+', text)
+    return [s.strip() for s in sentences if s.strip()]
+
+
+def tokenize_words(text):
+    """
+    Tokenizes text into words after cleaning it.
+    """
     cleaned = clean_text(text)
     return cleaned.split()
 
-def compute_word_freq(words: Union[str, List[str]]) -> dict:
+
+def compute_word_freq(words):
     """
-    Computes frequency of words from a string or list of words.
+    Computes frequency of words in a list.
     """
-    if isinstance(words, str):
-        words = tokenize_words(words)
     if not isinstance(words, list):
-        return {}
+        words = [str(words)]
 
     freq = {}
     for word in words:
         if isinstance(word, str):
-            word = word.lower()
             freq[word] = freq.get(word, 0) + 1
     return freq
