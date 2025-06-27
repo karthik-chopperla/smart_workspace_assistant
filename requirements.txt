@@ -1,0 +1,11 @@
+# Core App & UI
+streamlit>=1.30.0
+
+# NLP & Text Processing
+nltk>=3.8.1
+
+# Basic Utilities
+numpy>=1.26.0
+
+# Used internally for similarity, vector math, scheduling
+scikit-learn>=1.4.0
