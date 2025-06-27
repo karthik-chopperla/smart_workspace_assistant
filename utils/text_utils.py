@@ -3,8 +3,8 @@ import string
 
 def clean_text(text):
     """
-    Clean and normalize input text.
-    Handles strings, None, lists, or other data types gracefully.
+    Cleans and normalizes text: lowercases, removes punctuation, trims spaces.
+    Accepts str, list, or None.
     """
     if not isinstance(text, str):
         if isinstance(text, list):
@@ -14,18 +14,15 @@ def clean_text(text):
         else:
             text = str(text)
 
-    # Lowercase
     text = text.lower()
-    # Remove punctuation
     text = re.sub(f"[{re.escape(string.punctuation)}]", "", text)
-    # Remove extra whitespace
     text = re.sub(r"\s+", " ", text)
     return text.strip()
 
 
 def tokenize_sentences(text):
     """
-    Split cleaned text into a list of sentences.
+    Splits text into sentences using punctuation as delimiters.
     """
     if not isinstance(text, str):
         text = clean_text(text)
@@ -35,22 +32,21 @@ def tokenize_sentences(text):
 
 def tokenize_words(text):
     """
-    Tokenize cleaned text into a list of words.
+    Splits cleaned text into individual words.
     """
     cleaned = clean_text(text)
-    return cleaned.split() if isinstance(cleaned, str) else []
+    return cleaned.split()
 
 
 def compute_word_freq(words):
     """
-    Calculate frequency of each word from a list or raw text.
+    Builds a frequency dictionary for a list of words.
     """
     if not isinstance(words, list):
         words = tokenize_words(words)
 
     freq = {}
     for word in words:
-        word = word.strip().lower()
         if word:
             freq[word] = freq.get(word, 0) + 1
     return freq
