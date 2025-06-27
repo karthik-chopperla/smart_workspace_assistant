@@ -1,25 +1,22 @@
 from utils.text_utils import tokenize_sentences, tokenize_words, compute_word_freq, extract_tasks
 
-def summarize_email(email_text: str) -> dict:
-    # Break email into sentences
+def summarize_email(email_text, max_sentences=3):
     sentences = tokenize_sentences(email_text)
     words = tokenize_words(email_text)
-    
-    # Compute word frequency
     freq = compute_word_freq(words)
 
-    # Score each sentence
-    sentence_scores = {}
+    # Score sentences based on word frequency
+    scored_sentences = []
     for sentence in sentences:
         word_list = tokenize_words(sentence)
-        score = sum(freq.get(word.lower(), 0) for word in word_list)
-        sentence_scores[sentence] = score
+        score = sum(freq.get(word, 0) for word in word_list)
+        scored_sentences.append((score, sentence))
 
-    # Take top 3 highest scoring sentences
-    top_sentences = sorted(sentence_scores, key=sentence_scores.get, reverse=True)[:3]
+    # Sort and select top sentences
+    top_sentences = [s for _, s in sorted(scored_sentences, reverse=True)[:max_sentences]]
     summary = " ".join(top_sentences).strip()
 
-    # Extract tasks
+    # Extract actionable tasks
     tasks = extract_tasks(email_text)
 
     return {

@@ -1,7 +1,7 @@
 import re
 
 def clean_text(text):
-    """Clean and lowercase the text."""
+    """Cleans and lowers the input text."""
     if not isinstance(text, str):
         text = str(text) if text is not None else ""
     return text.strip().lower()
@@ -18,7 +18,7 @@ def tokenize_words(text):
     return cleaned.split()
 
 def compute_word_freq(words):
-    """Count word frequencies from a list of words."""
+    """Compute frequency of each word in a list."""
     freq = {}
     for word in words:
         if isinstance(word, str):
@@ -27,13 +27,9 @@ def compute_word_freq(words):
 
 def extract_tasks(text):
     """Extract task-like sentences using task keywords."""
-    task_keywords = [
-        "finalize", "schedule", "prepare", "compile", "check",
-        "make sure", "send", "submit", "review", "complete"
-    ]
+    task_keywords = ["finalize", "schedule", "prepare", "compile", "check", "make sure"]
     sentences = tokenize_sentences(text)
     tasks = []
-
     for sentence in sentences:
         for keyword in task_keywords:
             if keyword in sentence.lower():
