@@ -1,39 +1,38 @@
 import re
-from collections import Counter
-
+from typing import List
 
 def clean_text(text: str) -> str:
     """
-    Lowercases, removes non-alphanumeric characters, and extra spaces.
+    Cleans the input text: removes special characters, lowercases everything.
+    If a list is accidentally passed, it's converted to a single string first.
     """
+    if isinstance(text, list):
+        text = " ".join(text)
+
     text = text.lower()
-    text = re.sub(r'[^a-z0-9\s]', '', text)
-    text = re.sub(r'\s+', ' ', text).strip()
+    text = ''.join(c for c in text if c.isalnum() or c.isspace())
     return text
 
-
-def tokenize_sentences(text: str):
+def tokenize_sentences(text: str) -> List[str]:
     """
-    Splits text into individual sentences or note lines using:
-    - Newlines
-    - Periods followed by space
+    Splits the text into sentences based on punctuation.
     """
-    raw_sentences = re.split(r'[\n\r]+|(?<=[.])\s+', text)
-    return [s.strip() for s in raw_sentences if s.strip()]
+    text = clean_text(text)
+    return re.split(r'(?<=[.!?]) +', text)
 
-
-def tokenize_words(text: str):
+def tokenize_words(text: str) -> List[str]:
     """
-    Splits cleaned text into words.
+    Tokenizes a string into words using spaces. Cleans the text first.
     """
     cleaned = clean_text(text)
     return cleaned.split()
 
-
-def compute_word_freq(text: str, top_n: int = 5):
+def compute_word_freq(text: str) -> dict:
     """
-    Returns the top N most frequent words in the text.
+    Computes the frequency of each word in the text.
     """
     words = tokenize_words(text)
-    counter = Counter(words)
-    return counter.most_common(top_n)
+    freq = {}
+    for word in words:
+        freq[word] = freq.get(word, 0) + 1
+    return freq
