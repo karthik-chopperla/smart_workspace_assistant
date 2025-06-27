@@ -1,26 +1,24 @@
 import re
 
 def clean_text(text):
-    """Clean text by removing extra spaces and converting to lowercase."""
+    """Lowercase and remove unwanted characters."""
     if not isinstance(text, str):
         text = str(text) if text is not None else ""
     return text.strip().lower()
 
 def tokenize_sentences(text):
     """Split text into sentences."""
-    text = clean_text(text)
-    sentences = re.split(r'[.!?]', text)
+    cleaned = clean_text(text)
+    sentences = re.split(r'[.!?]', cleaned)
     return [s.strip() for s in sentences if s.strip()]
 
 def tokenize_words(text):
-    """Tokenize text into individual words."""
-    text = clean_text(text)
-    return re.findall(r'\b\w+\b', text)
+    """Split text into words."""
+    cleaned = clean_text(text)
+    return cleaned.split()
 
 def compute_word_freq(words):
-    """Compute frequency of each word in a list of words."""
-    if not isinstance(words, list):
-        words = tokenize_words(words)
+    """Compute frequency of each word."""
     freq = {}
     for word in words:
         if isinstance(word, str):
@@ -28,8 +26,8 @@ def compute_word_freq(words):
     return freq
 
 def extract_tasks(text):
-    """Extract lines that seem to contain tasks based on action verbs."""
-    task_keywords = ["finalize", "schedule", "prepare", "compile", "check", "make sure", "send", "review"]
+    """Extract sentences containing task keywords."""
+    task_keywords = ["finalize", "schedule", "prepare", "compile", "check", "make sure", "send", "submit"]
     sentences = tokenize_sentences(text)
     tasks = []
 
