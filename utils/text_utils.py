@@ -3,7 +3,7 @@ import re
 def clean_text(text):
     """Cleans and lowers the input text."""
     if not isinstance(text, str):
-        raise TypeError(f"clean_text expected a string but got {type(text)}")
+        text = str(text) if text is not None else ""
     return text.strip().lower()
 
 def tokenize_sentences(text):
@@ -14,15 +14,11 @@ def tokenize_sentences(text):
 
 def tokenize_words(text):
     """Split cleaned text into individual words."""
-    if not isinstance(text, str):
-        raise TypeError(f"tokenize_words expected a string but got {type(text)}")
     cleaned = clean_text(text)
     return cleaned.split()
 
 def compute_word_freq(words):
     """Compute frequency of each word in a list."""
-    if not isinstance(words, list):
-        raise TypeError(f"compute_word_freq expected a list but got {type(words)}")
     freq = {}
     for word in words:
         if isinstance(word, str):
@@ -36,7 +32,7 @@ def extract_tasks(text):
     tasks = []
     for sentence in sentences:
         for keyword in task_keywords:
-            if keyword in sentence.lower():
+            if keyword in sentence:
                 tasks.append(sentence.strip())
                 break
     return tasks
