@@ -1,9 +1,8 @@
-from utils.text_utils import tokenize_sentences, tokenize_words, clean_text
+from utils.text_utils import tokenize_sentences
 
 def extract_tasks(email_text: str) -> list:
     """
-    Simulated AI-style task extractor.
-    Identifies sentences that include actionable task-like keywords.
+    Extracts actionable tasks from email based on simple verb keywords.
     """
 
     if not isinstance(email_text, str):
@@ -11,13 +10,12 @@ def extract_tasks(email_text: str) -> list:
 
     tasks = []
     action_keywords = [
-        "finalize", "send", "schedule", "prepare", "compile",
-        "check", "label", "meet", "submit", "report", "call", "organize", "review"
+        "finalize", "send", "schedule", "prepare", "compile", "check",
+        "label", "meet", "submit", "report", "organize", "review", "update"
     ]
 
     for sentence in tokenize_sentences(email_text):
-        sentence_lower = sentence.lower()
-        if any(kw in sentence_lower for kw in action_keywords):
+        if any(keyword in sentence.lower() for keyword in action_keywords):
             tasks.append(sentence.strip())
 
     return tasks
